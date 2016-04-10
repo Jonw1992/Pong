@@ -28,7 +28,6 @@ import javax.swing.JPanel;
 		public void startTheGame()
 		{
 			addKeyListener(new KeyListener());
-			new CalculateThread().start();
 			new PaintThread().start();
 			
 			setBackground(Color.black);
@@ -51,6 +50,7 @@ import javax.swing.JPanel;
 		{
 			public void run() 
 			{			
+				new CalculateThread().start();
 				while(true)
 				{
 					if(keyHeld)
@@ -68,18 +68,20 @@ import javax.swing.JPanel;
 					}
 				}
 			}
-		}		
-		
-		public class CalculateThread extends Thread 
-		{
-			public void run() 
+			
+			public class CalculateThread extends Thread 
 			{
-				while(true)
+				public void run() 
 				{
-					calculateIt();
+					while(true)
+					{
+						calculateIt();
+					}
 				}
 			}
-		}
+		}		
+		
+
 
 		
 		class KeyListener extends KeyAdapter

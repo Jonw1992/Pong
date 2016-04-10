@@ -112,14 +112,14 @@ public class PongController extends Game
 				testPaint = 0;
 				ballPaddle = false;
 			}
-			checkCollisions();
+
 		}
 		
 		//Handle all calculations here--------------------------------------------------------
 		@Override
 		public void calculateIt()
 		{
-
+						checkCollisions();
 		}
 		
 		//A better method of moving and object than Keylistener provides. It is updated every frame. 
