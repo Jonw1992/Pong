@@ -5,47 +5,52 @@ import java.applet.Applet;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
+import javax.swing.JPanel;
 
 
-	public abstract class Game extends Applet
+	public abstract class Game extends JPanel
 	{
 		protected final int SCREENX = 1366;
 		protected final int SCREENY = 768;
 		protected final int FRAMERATE = 60;
-		private Graphics bufferGraphics; 
-		private Image offscreen;
 		private KeyEvent event;
 		private boolean keyHeld;
 		
 		
-		public void init() 
+		public abstract void paintIt(Graphics g);
+		public abstract void calculateIt();
+		public abstract void onKeyDown(KeyEvent e);
+		public abstract void onKeyReleased(KeyEvent e);
+		public abstract void onKeyTyped(KeyEvent e);
+		public abstract void onKeyHeld(KeyEvent e);
+		
+		//Call this upon initialization of the extending class to start the game
+		public void startTheGame()
 		{
-			startIt();
 			addKeyListener(new KeyListener());
 			new CalculateThread().start();
 			new PaintThread().start();
-			offscreen = createImage(SCREENX,SCREENY); 
-			bufferGraphics = offscreen.getGraphics(); 
-		}
-		
-		public void update(Graphics g) 
-		{
-				bufferGraphics.clearRect(0,0,SCREENX,SCREENY);
-				paintIt(g,bufferGraphics);
-				g.drawImage(offscreen,0,0,this); 
-		}
+			
+			setBackground(Color.black);
 
-		public void paint(Graphics g) 
-		{
-			update(g);
+			setFocusable(true);
+			setFocusTraversalKeysEnabled(false);
 		}
 		
-		
+		public void paintComponent(Graphics g)
+		{
+				super.paintComponent(g);
+				Toolkit kit = Toolkit.getDefaultToolkit();
+				Dimension screenSize = kit.getScreenSize();
+
+				paintIt(g);
+	
+		}
 			
 		public class PaintThread extends Thread 
 		{
 			public void run() 
-			{
+			{			
 				while(true)
 				{
 					if(keyHeld)
@@ -59,8 +64,7 @@ import java.awt.event.KeyListener;
 						Thread.sleep(1000/FRAMERATE);
 					} catch (InterruptedException e) 
 					{
-						//the VM doesn’t want us to sleep anymore,
-						//so get back to work
+						e.printStackTrace();
 					}
 				}
 			}
@@ -76,14 +80,7 @@ import java.awt.event.KeyListener;
 				}
 			}
 		}
-			
-		public abstract void paintIt(Graphics g, Graphics bufferGraphics);
-		public abstract void calculateIt();
-		public abstract void startIt();
-		public abstract void onKeyDown(KeyEvent e);
-		public abstract void onKeyReleased(KeyEvent e);
-		public abstract void onKeyTyped(KeyEvent e);
-		public abstract void onKeyHeld(KeyEvent e);
+
 		
 		class KeyListener extends KeyAdapter
 		{

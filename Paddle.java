@@ -7,7 +7,7 @@ public class Paddle
 	protected int yPos = 0;
 	protected int width = 0;
 	protected int height = 0;
-	private int speed  = 10;
+	private int speed  = 15;
 	
 	public Paddle()
 	{
