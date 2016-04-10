@@ -14,6 +14,8 @@ import java.awt.event.KeyListener;
 		protected final int FRAMERATE = 60;
 		private Graphics bufferGraphics; 
 		private Image offscreen;
+		private KeyEvent event;
+		private boolean keyHeld;
 		
 		public void init() 
 		{
@@ -45,6 +47,10 @@ import java.awt.event.KeyListener;
 			{
 				while(true)
 				{
+					if(keyHeld)
+					{
+						onKeyHeld(event);
+					}
 					repaint();
 
 					try 
@@ -76,6 +82,7 @@ import java.awt.event.KeyListener;
 		public abstract void onKeyDown(KeyEvent e);
 		public abstract void onKeyReleased(KeyEvent e);
 		public abstract void onKeyTyped(KeyEvent e);
+		public abstract void onKeyHeld(KeyEvent e);
 		
 		class KeyListener extends KeyAdapter
 		{
@@ -89,11 +96,14 @@ import java.awt.event.KeyListener;
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
+				event = e;
+				keyHeld = true;
 				onKeyDown(e);
 			}
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
+				keyHeld = false;
 				onKeyReleased(e);
 			}
 

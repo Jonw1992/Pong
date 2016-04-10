@@ -12,21 +12,7 @@ public class PongController extends Game
 		private int testPaint = 0;
 		private int testCalculate = 0;
 		private Pong pong;
-		private boolean up;
-		private boolean down;
-		
-		public void handleMovement()
-		{
-			if(up)
-			{
-				pong.player.up();		
-			}
-			if(down)
-			{
-				pong.player.down();
-				
-			}
-		}
+
 		
 		//Initializion here -------------------------------------------------------------------
 		@Override
@@ -36,8 +22,6 @@ public class PongController extends Game
 			testStart=testPaint=testCalculate=0;
 			testStart++;
 			pong = new Pong();
-			up = false;
-			down = false;
 
 			
 		}
@@ -47,7 +31,6 @@ public class PongController extends Game
 		@Override
 		public void paintIt(Graphics g, Graphics bufferGraphics)
 		{
-			handleMovement();
 			bufferGraphics.setColor(pong.player.color);
 			bufferGraphics.fillRect(pong.player.xPos,pong.player.yPos,pong.player.width,pong.player.height);
 			
@@ -61,27 +44,38 @@ public class PongController extends Game
 
 			
 		}
-			
+		
+		//A better method of moving and object than Keylistener provides. It is updated every frame. 
 		@Override
-		public void onKeyDown(KeyEvent e)
+		public void onKeyHeld(KeyEvent e)
 		{
-			//System.out.println(KeyEvent.getKeyText(e.getKeyCode()));
+			System.out.println(KeyEvent.getKeyText(e.getKeyCode()));
 			if(KeyEvent.getKeyText(e.getKeyCode()).equals("Up"))
 			{
-					this.up = true;
+					if(pong.player.yPos > 0)
+					{
+						pong.player.up();					
+					}				
 			}
 			if(KeyEvent.getKeyText(e.getKeyCode()).equals("Down"))
 			{
-					this.down = true;
+					if(pong.player.yPos < (SCREENY - pong.player.height))
+					{
+						pong.player.down();					
+					}			
 			}
+			
+		}		
+		@Override
+		public void onKeyDown(KeyEvent e)
+		{
+
 			
 		}
 		
 		@Override
 		public void onKeyReleased(KeyEvent e)
 		{
-			up = down = false;
-			
 			System.out.println("Released");
 		}
 		
