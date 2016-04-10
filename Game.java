@@ -17,6 +17,7 @@ import java.awt.event.KeyListener;
 		private KeyEvent event;
 		private boolean keyHeld;
 		
+		
 		public void init() 
 		{
 			startIt();
@@ -103,7 +104,10 @@ import java.awt.event.KeyListener;
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
+				if(event.getKeyCode() == e.getKeyCode())
+				{
 				keyHeld = false;
+				}
 				onKeyReleased(e);
 			}
 

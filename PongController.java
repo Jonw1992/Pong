@@ -11,17 +11,21 @@ public class PongController extends Game
 		private int testStart = 0;
 		private int testPaint = 0;
 		private int testCalculate = 0;
-		private Pong pong;
+		private Paddle player;
+		private Ball ball;
 
 		
 		//Initializion here -------------------------------------------------------------------
 		@Override
 		public void startIt()
 		{
+			
 			setBackground(Color.BLACK);
+			player = new Paddle(50,50,25,100);
+			ball = new Ball(SCREENX/2 - 25 ,SCREENY/2 - 25 ,25,25);
 			testStart=testPaint=testCalculate=0;
 			testStart++;
-			pong = new Pong();
+
 
 			
 		}
@@ -31,8 +35,11 @@ public class PongController extends Game
 		@Override
 		public void paintIt(Graphics g, Graphics bufferGraphics)
 		{
-			bufferGraphics.setColor(pong.player.color);
-			bufferGraphics.fillRect(pong.player.xPos,pong.player.yPos,pong.player.width,pong.player.height);
+			bufferGraphics.setColor(ball.color);
+			bufferGraphics.fillRect(ball.xPos,ball.yPos,ball.width,ball.height);
+			
+			bufferGraphics.setColor(player.color);
+			bufferGraphics.fillRect(player.xPos,player.yPos,player.width,player.height);
 			
 			testPaint++;
 		}
@@ -52,16 +59,16 @@ public class PongController extends Game
 			System.out.println(KeyEvent.getKeyText(e.getKeyCode()));
 			if(KeyEvent.getKeyText(e.getKeyCode()).equals("Up"))
 			{
-					if(pong.player.yPos > 0)
+					if(player.yPos > 0)
 					{
-						pong.player.up();					
+						player.up();					
 					}				
 			}
 			if(KeyEvent.getKeyText(e.getKeyCode()).equals("Down"))
 			{
-					if(pong.player.yPos < (SCREENY - pong.player.height))
+					if(player.yPos < (SCREENY - player.height))
 					{
-						pong.player.down();					
+						player.down();					
 					}			
 			}
 			
