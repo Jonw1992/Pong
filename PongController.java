@@ -1,13 +1,11 @@
 import java.awt.*;
 import java.util.*;
 import java.text.DateFormat;
-import java.applet.Applet;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.lang.Math;
 import javax.swing.JPanel;
+import java.lang.Object;
 
 public class PongController extends Game
 {
@@ -15,66 +13,85 @@ public class PongController extends Game
 		private int testPaint = 0;
 		private int testCalculate = 0;
 		private Paddle player;
+		private Paddle enemy;
 		private Ball ball;
-		private boolean ballPaddle = false;
+		private boolean ballCollision = true;
+		
 
 		public void checkCollisions()
 		{
-			Rectangle p = new Rectangle(player.xPos+5,player.yPos,player.width,player.height);
-			Rectangle b = new Rectangle(ball.xPos,ball.yPos,ball.width,ball.height);
+			Rectangle p = player.getRect();
+			Rectangle b = ball.getRect();
+			Rectangle e = enemy.getRect();
 			
 			if(p.intersects(b) || b.intersects(p))
 			{
-				if(!ballPaddle)
+				if(ballCollision)
 				{
-				double xp = p.getX() + p.getWidth()/2;
-				double yp = p.getY() + p.getHeight()/2;
-				
-				double xb = b.getX() + b.getWidth()/2;
-				double yb = b.getY() + b.getHeight()/2;
-				
-				double dx = xp - xb;
-				double dy = yp - yb;
-				double angle = Math.atan2(dy,dx) * 180 / Math.PI;
-				
-				
-				ball.setDir(angle-180);
-				ballPaddle = true;
+					ball.checkBoundaries(true);
+					ballCollision = false;
 				}
 			}	
 			
-			if(ball.yPos <= 0+1)
+			else if(e.intersects(b) || b.intersects(e))
 			{
-				if(!ballPaddle)
+				if(ballCollision)
 				{
-				double cx = 0 + SCREENX/2;
-				double cy = 0 + SCREENY/2;
-				
-				double xb = b.getX() + b.getWidth()/2;
-				double yb = b.getY() + b.getHeight()/2;
-				
-				double dx = cx - xb;
-				double dy = cy - yb;
-				
-				
-				double angle = Math.atan2(dy,dx) * 180 / Math.PI;
-				
-				
-				ball.setDir(angle + 90);
-				ballPaddle = true;
+					ball.checkBoundaries(true);
+					ballCollision = false;
 				}
-				
+			}	
+			else 
+			{
+				ballCollision = true;
 			}
-				
+		}
+		
+		public void handleAI()
+		{
+			int num = 0;
+			int count =0;
+			if(ball.cx <= ScreenProperties.WIDTH/3)
+			{
+				enemy.setVelocity(1);
+			}
+			else if(ball.cx <= ScreenProperties.WIDTH/2)
+			{
+				enemy.setVelocity(4);
+			}
+			else if(ball.cx <= ScreenProperties.WIDTH/1.5)
+			{
+				enemy.setVelocity(7);
+			}
+
+				if(ball.cy >= enemy.cy -50)
+				{
+					if(enemy.velocity < 0)
+					{
+						enemy.setVelocity(-enemy.velocity);
+					}
+				}
+				else if(ball.cy < enemy.cy +50)
+				{
+					if(enemy.velocity > 0)
+					{
+						enemy.setVelocity(-enemy.velocity);
+					}
+				}
+
+
 		}
 		
 		
 		//Initializion here -------------------------------------------------------------------		
 		public PongController()
 		{
+
 			setBackground(Color.BLACK);
 			player = new Paddle(50,SCREENY/2 - 50,25,100);
+			enemy = new Paddle(ScreenProperties.WIDTH- 50,SCREENY/2 - 50,25,100);
 			ball = new Ball(SCREENX/2 - 25 ,SCREENY/2 - 25 ,25,25);
+			
 			testStart=testPaint=testCalculate=0;
 			testStart++;
 			
@@ -82,8 +99,9 @@ public class PongController extends Game
 			setFocusTraversalKeysEnabled(false);
 			
 			super.startTheGame();
+
 			
-			
+
 		}
 		
 	
@@ -92,34 +110,24 @@ public class PongController extends Game
 		@Override
 		public void paintIt(Graphics g)
 		{
+			
+			g.setColor(Color.BLACK);
+			g.fillRect(ScreenProperties.X,ScreenProperties.Y,ScreenProperties.WIDTH,ScreenProperties.HEIGHT);
 			checkCollisions();
-			ball.update();
-			g.setColor(ball.color);
-			g.fillRect(ball.xPos,ball.yPos,ball.width,ball.height);
-			
-			g.setColor(player.color);
-			g.fillRect(player.xPos,player.yPos,player.width,player.height);
-			
-			g.setColor(Color.GREEN);
-			g.drawRect(ball.xPos,ball.yPos,ball.width,ball.height);
-			
-			g.setColor(Color.GREEN);
-			g.drawRect(player.xPos,player.yPos,player.width,player.height);
-			
-			testPaint++;
-			if(testPaint> 10)
-			{
-				testPaint = 0;
-				ballPaddle = false;
-			}
 
+			handleAI();
+			ball.checkBoundaries(false);
+			ball.paint(g);
+			player.paint(g);
+			enemy.autoMove();
+			enemy.paint(g);
 		}
 		
 		//Handle all calculations here--------------------------------------------------------
 		@Override
 		public void calculateIt()
 		{
-						checkCollisions();
+				checkCollisions();
 		}
 		
 		//A better method of moving and object than Keylistener provides. It is updated every frame. 
@@ -129,14 +137,14 @@ public class PongController extends Game
 			//System.out.println(KeyEvent.getKeyText(e.getKeyCode()));
 			if(KeyEvent.getKeyText(e.getKeyCode()).equals("Up"))
 			{
-					if(player.yPos > 0)
+					if(player.y >= ScreenProperties.Y)
 					{
 						player.up();					
 					}				
 			}
 			if(KeyEvent.getKeyText(e.getKeyCode()).equals("Down"))
 			{
-					if(player.yPos < (SCREENY - player.height*1.5))
+					if(player.y <= ScreenProperties.HEIGHT - player.h)
 					{
 						player.down();					
 					}			

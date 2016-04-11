@@ -29,8 +29,6 @@ import javax.swing.JPanel;
 		{
 			addKeyListener(new KeyListener());
 			new PaintThread().start();
-			
-			setBackground(Color.black);
 
 			setFocusable(true);
 			setFocusTraversalKeysEnabled(false);
@@ -76,13 +74,18 @@ import javax.swing.JPanel;
 					while(true)
 					{
 						calculateIt();
+						
+					try 
+					{
+						Thread.sleep(1000/(FRAMERATE*4));
+					} catch (InterruptedException e) 
+					{
+						e.printStackTrace();
+					}
 					}
 				}
 			}
 		}		
-		
-
-
 		
 		class KeyListener extends KeyAdapter
 		{
@@ -111,5 +114,12 @@ import javax.swing.JPanel;
 			}
 
 		}
+		
+		public void print(String s)
+		{
+			
+			System.out.println(s);
+		}
+	
 		
 	} 
