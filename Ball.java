@@ -11,8 +11,8 @@ public class Ball
 	protected int h = 0;
 	protected int cx = 0;
 	protected int cy = 0 ;
-	private double speedX  = -7;
-	private double speedY  = 5;
+	private double speedX  = -10;
+	private double speedY  = 7;
 	private boolean deflected = false;
 	private int eScore;
 	private int pScore;
@@ -109,11 +109,31 @@ public class Ball
 			update();
 			g.setColor(color);
 			g.fillRect(x,y,w,h);
+			if(eScore == 10)
+			{
+				ScreenProperties.GAMEOVER = true;
+				ScreenProperties.PAUSED = true;
+				String s = "YOU LOSE!";
+				Font f = new Font("Helvetica", Font.BOLD, 40);
+				g.setFont(f); 
+				g.drawString(s, ScreenProperties.WIDTH/2 - 100, 150); 
+				
+			}
+			if(pScore == 10)
+			{
+				ScreenProperties.GAMEOVER = true;
+				ScreenProperties.PAUSED = true;
+				String s = "YOU WIN!";
+				Font f = new Font("Helvetica", Font.BOLD, 40);
+				g.setFont(f); 
+				g.drawString(s, ScreenProperties.WIDTH/2 - 90, 150); 		
+			}
 
-			String s = pScore + "  |  " + eScore;
-			Font f = new Font("Helvetica", Font.BOLD, 40);
-			g.setFont(f); 
-			g.drawString(s, ScreenProperties.WIDTH/2 - 45, 100); 
+				String s = pScore + "  |  " + eScore;
+				Font f = new Font("Helvetica", Font.BOLD, 40);
+				g.setFont(f); 
+				g.drawString(s, ScreenProperties.WIDTH/2 - 45, 100); 				
+		
 		
 	}
 	

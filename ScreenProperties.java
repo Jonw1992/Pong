@@ -6,5 +6,6 @@ public class ScreenProperties
 	public static final int WIDTH = SCREENX - 15;
 	public static final int Y = 10;
 	public static final int HEIGHT = SCREENY - 50;
-
+	public static boolean PAUSED = false;
+	public static boolean GAMEOVER = false;
 }

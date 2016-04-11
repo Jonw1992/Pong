@@ -10,7 +10,7 @@ public class Paddle
 	protected int h = 0;
 	protected int cx = 0;
 	protected int cy = 0 ;
-	private int speed  = 10;
+	private int speed  = 15;
 	protected int velocity = 20;
 	
 	public Paddle()

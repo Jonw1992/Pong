@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 		protected final int FRAMERATE = 60;
 		private KeyEvent event;
 		private boolean keyHeld;
+
 		
 		
 		public abstract void paintIt(Graphics g);
@@ -51,18 +52,21 @@ import javax.swing.JPanel;
 				new CalculateThread().start();
 				while(true)
 				{
-					if(keyHeld)
+					if(!ScreenProperties.PAUSED)
 					{
-						onKeyHeld(event);
-					}
-					repaint();
+						if(keyHeld)
+						{
+							onKeyHeld(event);
+						}
+						repaint();
 
-					try 
-					{
-						Thread.sleep(1000/FRAMERATE);
-					} catch (InterruptedException e) 
-					{
-						e.printStackTrace();
+						try 
+						{
+							Thread.sleep((1000/FRAMERATE));
+						} catch (InterruptedException e) 
+						{
+							e.printStackTrace();
+						}
 					}
 				}
 			}

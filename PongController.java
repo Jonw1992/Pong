@@ -53,7 +53,7 @@ public class PongController extends Game
 			int count =0;
 			if(ball.cx <= ScreenProperties.WIDTH/3)
 			{
-				enemy.setVelocity(1);
+				enemy.setVelocity(3);
 			}
 			else if(ball.cx <= ScreenProperties.WIDTH/2)
 			{
@@ -61,7 +61,7 @@ public class PongController extends Game
 			}
 			else if(ball.cx <= ScreenProperties.WIDTH/1.5)
 			{
-				enemy.setVelocity(7);
+				enemy.setVelocity(10);
 			}
 
 				if(ball.cy >= enemy.cy -50)
@@ -154,6 +154,24 @@ public class PongController extends Game
 		@Override
 		public void onKeyDown(KeyEvent e)
 		{
+			System.out.println((KeyEvent.getKeyText(e.getKeyCode()).equals("P")));
+			if(KeyEvent.getKeyText(e.getKeyCode()).equals("P"))
+			{
+				if(ScreenProperties.PAUSED == false)
+				{
+						ScreenProperties.PAUSED = true;
+					
+				}
+				else
+				{
+					ScreenProperties.PAUSED = false;				
+				}
+				
+				
+			}			
+
+
+			
 
 			
 		}
